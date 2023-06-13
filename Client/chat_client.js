@@ -11,18 +11,14 @@
 
 "use strict";
 
-import * as ws from "ws";
-
 // Output printLogging information to console.
-
 const printLog = (text) => {
   let time = new Date();
 
-  console.printLog("[" + time.toLocaleTimeString() + "] " + text);
+  console.log("[" + time.toLocaleTimeString() + "] " + text);
 };
 
 // Output an error message to console.
-
 const printLogError = (text) => {
   let time = new Date();
 
@@ -30,10 +26,9 @@ const printLogError = (text) => {
 };
 
 // Get our hostname
-
 let myHostname = window.location.hostname;
 if (!myHostname) {
-  myHostname = "localhost";
+  myHostname = "127.0.0.1"; // cannot use localhost
 }
 printLog("Hostname: " + myHostname);
 
@@ -72,7 +67,6 @@ let webcamStream = null; // MediaStream from webcam
 
 // Send a JavaScript object by converting it to JSON and sending
 // it as a message on the WebSocket connection.
-
 function sendToServer(msg) {
   let msgJSON = JSON.stringify(msg);
 
@@ -91,7 +85,7 @@ function setUsername() {
     name: myUsername,
     date: Date.now(),
     id: clientID,
-    type: "username",
+    type: "USERNAME",
   });
 }
 
@@ -110,18 +104,18 @@ function connect() {
   serverUrl = scheme + "://" + myHostname + ":6503";
 
   printLog(`Connecting to server: ${serverUrl}`);
-  connection = new ws.WebSocket(serverUrl);
+  connection = new WebSocket(serverUrl);
 
-  connection.onopen((evt) => {
+  connection.onopen = (evt) => {
     document.getElementById("text").disabled = false;
     document.getElementById("send").disabled = false;
-  });
+  };
 
-  connection.onerror((evt) => {
+  connection.onerror = (evt) => {
     console.dir(evt);
-  });
+  };
 
-  connection.onmessage((evt) => {
+  connection.onmessage = (evt) => {
     let chatBox = document.querySelector(".chatbox");
     let text = "";
     let msg = JSON.parse(evt.data);
@@ -197,7 +191,7 @@ function connect() {
       chatBox.innerHTML += text;
       chatBox.scrollTop = chatBox.scrollHeight - chatBox.clientHeight;
     }
-  });
+  };
 }
 
 // Handles a click on the Send button (or pressing return/enter) by
