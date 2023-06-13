@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "rtc_server.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "webrtc-adapter": "^8.2.2",
     "ws": "^8.13.0"
   }
 }

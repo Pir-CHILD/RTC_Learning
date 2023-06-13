@@ -12,7 +12,7 @@ const printLog = (text) => {
 // const webSocketServer = new ws.Server({ port: 6503 });
 const serverInfo = { port: 6503, path: "0.0.0.0" }; // path, 允许的源路径
 const wsServer = new ws.WebSocketServer(
-  { port: serverInfo.port, clientTracking: true, path: serverInfo.path },
+  { port: serverInfo.port, clientTracking: true },
   () => printLog("Server is listening on " + String(serverInfo.port))
 );
 
@@ -89,7 +89,7 @@ function sendUserListToAll() {
 }
 
 wsServer.on("connection", (ws, request) => {
-  printLog("Rcv request: " + JSON.stringify(request));
+  printLog("Rcv request: " + JSON.stringify(request.headers));
   printLog("Connection accepted from " + ws.url);
   // connectionArray.push(ws);
 
@@ -106,7 +106,7 @@ wsServer.on("connection", (ws, request) => {
     type: "ID",
     id: ws.clientID,
   };
-  ws.send(msg, JSON.stringify(msg));
+  ws.send(JSON.stringify(msg));
 
   ws.on("message", (data, isBinary) => {
     let content = JSON.parse(data.toString());
@@ -164,6 +164,7 @@ wsServer.on("connection", (ws, request) => {
     }
   });
 
+  //FIXME: what code and reason?
   ws.on("close", (code, reason) => {
     printLog(
       "[DISCONNECT]Client IP: " +
